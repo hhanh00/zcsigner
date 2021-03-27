@@ -1,0 +1,3 @@
+[submodule "native/zc"]
+	path = native/zc
+	url = git@github.com:hhanh00/zcash-cold-wallet.git
