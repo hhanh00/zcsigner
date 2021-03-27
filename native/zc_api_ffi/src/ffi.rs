@@ -1,6 +1,10 @@
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
+use std::panic::catch_unwind;
 use std::slice;
+use tokio::runtime::Runtime;
+use zcash_coldwallet::constants::LIGHTNODE_URL;
+use zcash_coldwallet::ZECUnit;
 
 #[repr(C)]
 pub struct CKeys {
@@ -78,4 +82,107 @@ pub extern "C" fn send_tx(
 pub extern "C" fn check_address(address: *mut c_char) -> bool {
     let address = unsafe { CStr::from_ptr(address) };
     zcash_coldwallet::keys::check_address(&address.to_string_lossy())
+}
+
+#[no_mangle]
+pub extern "C" fn get_address(viewing_key: *mut c_char) -> *const c_char {
+    let viewing_key = unsafe { CStr::from_ptr(viewing_key) };
+    let address = match zcash_coldwallet::keys::get_address(&viewing_key.to_string_lossy()) {
+        Ok(a) => a,
+        Err(e) => e.to_string(),
+    };
+    CString::new(address).unwrap().into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn get_key_type(key: *mut c_char) -> *const c_char {
+    let key = unsafe { CStr::from_ptr(key) };
+    let key_type = match zcash_coldwallet::keys::get_key_type(&key.to_string_lossy()) {
+        zcash_coldwallet::keys::KeyType::UNKNOWN => "",
+        zcash_coldwallet::keys::KeyType::SECRET_KEY => "secret",
+        zcash_coldwallet::keys::KeyType::VIEWING_KEY => "viewing",
+    };
+    CString::new(key_type).unwrap().into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn init_account_with_viewing_key(
+    database_path: *mut c_char,
+    viewing_key: *mut c_char,
+    height: u32,
+) {
+    let database_path = unsafe { CStr::from_ptr(database_path) };
+    let viewing_key = unsafe { CStr::from_ptr(viewing_key) };
+    let mut r = Runtime::new().unwrap();
+    r.block_on(async {
+        zcash_coldwallet::account::init_account(
+            &database_path.to_string_lossy(),
+            LIGHTNODE_URL,
+            &viewing_key.to_string_lossy(),
+            height as u64,
+        )
+        .await
+        .unwrap();
+    });
+}
+
+#[repr(C)]
+pub struct Buffer {
+    data: *mut u8,
+    len: usize,
+}
+
+#[no_mangle]
+pub extern "C" fn prepare_tx(
+    database_path: *mut c_char,
+    address: *mut c_char,
+    amount: u64,
+) -> *const c_char {
+    let database_path = unsafe { CStr::from_ptr(database_path) };
+    let address = unsafe { CStr::from_ptr(address) };
+    let tx = match crate::account::prepare_tx(
+        &database_path.to_string_lossy(),
+        &address.to_string_lossy(),
+        amount,
+    ) {
+        Ok(tx) => tx,
+        Err(e) => vec![],
+    };
+    let buf = base64::encode(tx);
+    CString::new(buf).unwrap().into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn sign_tx(
+    secret_key: *mut c_char,
+    tx: *mut c_char,
+    spend_params: *const c_char,
+    len_spend_params: usize,
+    output_params: *const c_char,
+    len_output_params: usize,
+) -> *const c_char {
+    let secret_key = unsafe { CStr::from_ptr(secret_key) }.to_string_lossy();
+    let tx = unsafe { CStr::from_ptr(tx) }.to_string_lossy();
+    let spend_params =
+        unsafe { slice::from_raw_parts(spend_params as *const u8, len_spend_params) };
+    let output_params =
+        unsafe { slice::from_raw_parts(output_params as *const u8, len_output_params) };
+    let raw_tx = match crate::account::sign(&secret_key, &tx, &spend_params, &output_params) {
+        Ok(tx) => tx,
+        Err(e) => format!("{:?}", e),
+    };
+    CString::new(raw_tx).unwrap().into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn broadcast(raw_tx: *mut c_char) -> *const c_char {
+    let raw_tx = unsafe { CStr::from_ptr(raw_tx) }.to_string_lossy();
+    let mut r = Runtime::new().unwrap();
+    let message = r.block_on(async {
+        match crate::account::broadcast_async(&raw_tx).await {
+            Ok(tx) => tx,
+            Err(e) => format!("{:?}", e),
+        }
+    });
+    CString::new(message).unwrap().into_raw()
 }

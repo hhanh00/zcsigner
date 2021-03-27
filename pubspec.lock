@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.1.0"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   characters:
     dependency: transitive
     description:
@@ -156,7 +163,7 @@ packages:
     source: hosted
     version: "3.0.0"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       url: "https://pub.dartlang.org"
@@ -244,6 +251,13 @@ packages:
     dependency: transitive
     description:
       name: graphs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
+  hex:
+    dependency: "direct main"
+    description:
+      name: hex
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
@@ -444,12 +458,19 @@ packages:
     source: hosted
     version: "4.0.0"
   quiver:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  rflutter_alert:
+    dependency: "direct main"
+    description:
+      name: rflutter_alert
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -525,6 +546,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  sprintf:
+    dependency: "direct main"
+    description:
+      name: sprintf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.0"
   sqflite:
     dependency: "direct main"
     description:
@@ -567,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  string_splitter:
+    dependency: "direct main"
+    description:
+      name: string_splitter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+1"
   synchronized:
     dependency: transitive
     description:

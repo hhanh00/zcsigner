@@ -35,6 +35,10 @@ class ZcApi {
         Utf8.fromUtf8(keys.address));
   }
 
+  static KeyPackage initAccountWithViewKey(String databasePath, String viewingKey, int height) {
+    zc_ffi.init_account_with_viewing_key(Utf8.toUtf8(databasePath), Utf8.toUtf8(viewingKey), height);
+  }
+
   static int sync(String databasePath, int maxBlocks) {
     final n = zc_ffi.sync(Utf8.toUtf8(databasePath), maxBlocks);
     return n;
@@ -74,5 +78,38 @@ class ZcApi {
 
   static bool checkAddress(String address) {
     return zc_ffi.check_address(Utf8.toUtf8(address)) != 0;
+  }
+
+  static String getAddress(String viewingKey) {
+    final address =  zc_ffi.get_address(Utf8.toUtf8(viewingKey));
+    return Utf8.fromUtf8(address);
+  }
+
+  static String getKeyType(String key) {
+    final type = zc_ffi.get_key_type(Utf8.toUtf8(key));
+    return Utf8.fromUtf8(type);
+  }
+
+  static String prepareTx(String databasePath, String address, double amount) {
+    final sats = (amount * 100000000).round();
+    final tx = zc_ffi.prepare_tx(Utf8.toUtf8(databasePath), Utf8.toUtf8(address), sats);
+    return Utf8.fromUtf8(tx);
+  }
+
+  static String sign(String secretKey, String tx, ByteData sendParams, ByteData outputParams) {
+    final sendP = castParams(sendParams);
+    final outputP = castParams(outputParams);
+    final rawTx = zc_ffi.sign_tx(Utf8.toUtf8(secretKey), Utf8.toUtf8(tx),
+        sendP,
+        sendParams.lengthInBytes,
+        outputP,
+        outputParams.lengthInBytes);
+
+    return Utf8.fromUtf8(rawTx);
+  }
+
+  static String broadcast(String rawTx) {
+    final result = zc_ffi.broadcast(Utf8.toUtf8(rawTx));
+    return Utf8.fromUtf8(result);
   }
 }
