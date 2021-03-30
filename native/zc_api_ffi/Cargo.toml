@@ -21,5 +21,5 @@ base64 = "0.13.0"
 lazy-static-include = "3.0.5"
 
 [build-dependencies]
-cbindgen = "0.14.3"
+cbindgen = "0.18.0"
 dart-bindgen = "0.1.7"

@@ -33,17 +33,33 @@ class CKeys extends Struct {
 
 }
 
+/// C struct `CResult______c_char`.
+class CResult______c_char extends Struct {
+  
+  Pointer<ffi.Utf8> ok;
+  Pointer<ffi.Utf8> err;
+  static Pointer<CResult______c_char> allocate() {
+    return ffi.allocate<CResult______c_char>();
+  }
+
+
+  static CResult______c_char from(int ptr) {
+    return Pointer<CResult______c_char>.fromAddress(ptr).ref;
+  }
+
+}
+
 /// C function `broadcast`.
-Pointer<ffi.Utf8> broadcast(
+CResult______c_char broadcast(
   Pointer<ffi.Utf8> raw_tx,
 ) {
   return _broadcast(raw_tx);
 }
 final _broadcast_Dart _broadcast = _dl.lookupFunction<_broadcast_C, _broadcast_Dart>('broadcast');
-typedef _broadcast_C = Pointer<ffi.Utf8> Function(
+typedef _broadcast_C = CResult______c_char Function(
   Pointer<ffi.Utf8> raw_tx,
 );
-typedef _broadcast_Dart = Pointer<ffi.Utf8> Function(
+typedef _broadcast_Dart = CResult______c_char Function(
   Pointer<ffi.Utf8> raw_tx,
 );
 
@@ -86,6 +102,20 @@ typedef _get_balance_C = Uint64 Function(
   Pointer<ffi.Utf8> database_path,
 );
 typedef _get_balance_Dart = int Function(
+  Pointer<ffi.Utf8> database_path,
+);
+
+/// C function `get_height`.
+int get_height(
+  Pointer<ffi.Utf8> database_path,
+) {
+  return _get_height(database_path);
+}
+final _get_height_Dart _get_height = _dl.lookupFunction<_get_height_C, _get_height_Dart>('get_height');
+typedef _get_height_C = Uint32 Function(
+  Pointer<ffi.Utf8> database_path,
+);
+typedef _get_height_Dart = int Function(
   Pointer<ffi.Utf8> database_path,
 );
 
@@ -152,7 +182,7 @@ typedef _initialize_Dart = int Function(
 );
 
 /// C function `prepare_tx`.
-Pointer<ffi.Utf8> prepare_tx(
+CResult______c_char prepare_tx(
   Pointer<ffi.Utf8> database_path,
   Pointer<ffi.Utf8> address,
   int amount,
@@ -160,12 +190,12 @@ Pointer<ffi.Utf8> prepare_tx(
   return _prepare_tx(database_path, address, amount);
 }
 final _prepare_tx_Dart _prepare_tx = _dl.lookupFunction<_prepare_tx_C, _prepare_tx_Dart>('prepare_tx');
-typedef _prepare_tx_C = Pointer<ffi.Utf8> Function(
+typedef _prepare_tx_C = CResult______c_char Function(
   Pointer<ffi.Utf8> database_path,
   Pointer<ffi.Utf8> address,
   Uint64 amount,
 );
-typedef _prepare_tx_Dart = Pointer<ffi.Utf8> Function(
+typedef _prepare_tx_Dart = CResult______c_char Function(
   Pointer<ffi.Utf8> database_path,
   Pointer<ffi.Utf8> address,
   int amount,
@@ -207,7 +237,7 @@ typedef _send_tx_Dart = void Function(
 );
 
 /// C function `sign_tx`.
-Pointer<ffi.Utf8> sign_tx(
+CResult______c_char sign_tx(
   Pointer<ffi.Utf8> secret_key,
   Pointer<ffi.Utf8> tx,
   Pointer<ffi.Utf8> spend_params,
@@ -218,7 +248,7 @@ Pointer<ffi.Utf8> sign_tx(
   return _sign_tx(secret_key, tx, spend_params, len_spend_params, output_params, len_output_params);
 }
 final _sign_tx_Dart _sign_tx = _dl.lookupFunction<_sign_tx_C, _sign_tx_Dart>('sign_tx');
-typedef _sign_tx_C = Pointer<ffi.Utf8> Function(
+typedef _sign_tx_C = CResult______c_char Function(
   Pointer<ffi.Utf8> secret_key,
   Pointer<ffi.Utf8> tx,
   Pointer<ffi.Utf8> spend_params,
@@ -226,7 +256,7 @@ typedef _sign_tx_C = Pointer<ffi.Utf8> Function(
   Pointer<ffi.Utf8> output_params,
   Uint64 len_output_params,
 );
-typedef _sign_tx_Dart = Pointer<ffi.Utf8> Function(
+typedef _sign_tx_Dart = CResult______c_char Function(
   Pointer<ffi.Utf8> secret_key,
   Pointer<ffi.Utf8> tx,
   Pointer<ffi.Utf8> spend_params,

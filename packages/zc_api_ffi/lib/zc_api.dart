@@ -14,6 +14,12 @@ class KeyPackage {
   KeyPackage(this.phrase, this.spendingKey, this.address);
 }
 
+class ZcApiException implements Exception {
+  final String message;
+  ZcApiException([this.message]);
+  String toString() { return this.message ?? "Exception"; }
+}
+
 class ZcApi {
   static const MethodChannel _channel =
   const MethodChannel('zc_api');
@@ -93,7 +99,9 @@ class ZcApi {
   static String prepareTx(String databasePath, String address, double amount) {
     final sats = (amount * 100000000).round();
     final tx = zc_ffi.prepare_tx(Utf8.toUtf8(databasePath), Utf8.toUtf8(address), sats);
-    return Utf8.fromUtf8(tx);
+    if (tx.err != null)
+      throw ZcApiException(Utf8.fromUtf8(tx.err));
+    return Utf8.fromUtf8(tx.ok);
   }
 
   static String sign(String secretKey, String tx, ByteData sendParams, ByteData outputParams) {
@@ -104,12 +112,19 @@ class ZcApi {
         sendParams.lengthInBytes,
         outputP,
         outputParams.lengthInBytes);
-
-    return Utf8.fromUtf8(rawTx);
+    if (rawTx.err != null)
+      throw ZcApiException(Utf8.fromUtf8(rawTx.err));
+    return Utf8.fromUtf8(rawTx.ok);
   }
 
   static String broadcast(String rawTx) {
     final result = zc_ffi.broadcast(Utf8.toUtf8(rawTx));
-    return Utf8.fromUtf8(result);
+    if (result.err != null)
+      throw ZcApiException(Utf8.fromUtf8(result.err));
+    return Utf8.fromUtf8(result.ok);
+  }
+
+  static int getHeight(String databasePath) {
+    return zc_ffi.get_height(Utf8.toUtf8(databasePath));
   }
 }

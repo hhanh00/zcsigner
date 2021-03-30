@@ -28,6 +28,9 @@ abstract class _AppStore with Store {
   @observable
   bool syncing = false;
 
+  @observable
+  int height = 0;
+
   @action
   Future<bool> init() async {
     spendParams = await rootBundle.load('assets/sapling-spend.params');
@@ -70,12 +73,13 @@ abstract class _AppStore with Store {
     do {
       n = await compute(syncOne, databasePath);
       balance = ZcApi.getBalance(databasePath) / 100000000.0;
+      height = ZcApi.getHeight(databasePath);
     } while (n > 0);
     syncing = false;
   }
 }
 
 int syncOne(String databasePath) {
-  int n = ZcApi.sync(databasePath, 200);
+  int n = ZcApi.sync(databasePath, 1000);
   return n;
 }

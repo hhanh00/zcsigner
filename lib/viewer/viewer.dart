@@ -30,6 +30,7 @@ class ViewerState extends State<Viewer> {
                   Text(appStore.address),
                   Text("${appStore.balance}",
                       style: Theme.of(context).textTheme.headline2),
+                  Text("${appStore.height}"),
                   IconButton(
                       icon: appStore.syncing
                           ? Icon(Icons.stop)

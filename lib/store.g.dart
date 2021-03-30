@@ -84,6 +84,21 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  final _$heightAtom = Atom(name: '_AppStore.height');
+
+  @override
+  int get height {
+    _$heightAtom.reportRead();
+    return super.height;
+  }
+
+  @override
+  set height(int value) {
+    _$heightAtom.reportWrite(value, super.height, () {
+      super.height = value;
+    });
+  }
+
   final _$initAsyncAction = AsyncAction('_AppStore.init');
 
   @override
@@ -125,7 +140,8 @@ balance: ${balance},
 secretKey: ${secretKey},
 viewingKey: ${viewingKey},
 address: ${address},
-syncing: ${syncing}
+syncing: ${syncing},
+height: ${height}
     ''';
   }
 }
