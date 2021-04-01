@@ -55,8 +55,17 @@ class Importer extends StatelessWidget {
                 )
               ]).show();
         } else {
-          appStore.setKey(keyType, code.rawContent, 0);
+          final secretKey = code.rawContent;
+          appStore.setKey(keyType, secretKey, 0);
         }
+      }
+      else {
+        await Alert(
+          context: context,
+          type: AlertType.error,
+          title: 'Invalid key',
+          desc: '${code.rawContent} is not a secret/view valid key',
+        ).show();
       }
     };
   }

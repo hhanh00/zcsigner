@@ -8,6 +8,12 @@ use zcash_coldwallet::constants::LIGHTNODE_URL;
 use zcash_coldwallet::ZECUnit;
 
 #[repr(C)]
+pub struct CResult<T> {
+    ok: T,
+    err: *const c_char,
+}
+
+#[repr(C)]
 pub struct CKeys {
     phrase: *mut c_char,
     derivation_path: *mut c_char,
@@ -86,13 +92,17 @@ pub extern "C" fn check_address(address: *mut c_char) -> bool {
 }
 
 #[no_mangle]
-pub extern "C" fn get_address(viewing_key: *mut c_char) -> *const c_char {
+pub extern "C" fn get_viewing_key(secret_key: *mut c_char) -> CResult<*const c_char> {
+    let secret_key = unsafe { CStr::from_ptr(secret_key) };
+    let viewing_key = zcash_coldwallet::keys::get_viewing_key(&secret_key.to_string_lossy());
+    convert_result(viewing_key)
+}
+
+#[no_mangle]
+pub extern "C" fn get_address(viewing_key: *mut c_char) -> CResult<*const c_char> {
     let viewing_key = unsafe { CStr::from_ptr(viewing_key) };
-    let address = match zcash_coldwallet::keys::get_address(&viewing_key.to_string_lossy()) {
-        Ok(a) => a,
-        Err(e) => e.to_string(),
-    };
-    CString::new(address).unwrap().into_raw()
+    let address = zcash_coldwallet::keys::get_address(&viewing_key.to_string_lossy());
+    convert_result(address)
 }
 
 #[no_mangle]
@@ -125,12 +135,6 @@ pub extern "C" fn init_account_with_viewing_key(
         .await
         .unwrap();
     });
-}
-
-#[repr(C)]
-pub struct CResult<T> {
-    ok: T,
-    err: *const c_char,
 }
 
 fn convert_result(r: anyhow::Result<String>) -> CResult<*const c_char> {

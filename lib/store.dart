@@ -55,7 +55,11 @@ abstract class _AppStore with Store {
       ZcApi.initialize(databasePath);
       ZcApi.initAccountWithViewKey(databasePath, key, height);
     }
-    else secretKey = key;
+    else {
+      final viewingKey = ZcApi.getViewingKey(key);
+      address = ZcApi.getAddress(viewingKey);
+      secretKey = key;
+    }
   }
 
   @action

@@ -78,16 +78,16 @@ typedef _check_address_Dart = int Function(
 );
 
 /// C function `get_address`.
-Pointer<ffi.Utf8> get_address(
+CResult______c_char get_address(
   Pointer<ffi.Utf8> viewing_key,
 ) {
   return _get_address(viewing_key);
 }
 final _get_address_Dart _get_address = _dl.lookupFunction<_get_address_C, _get_address_Dart>('get_address');
-typedef _get_address_C = Pointer<ffi.Utf8> Function(
+typedef _get_address_C = CResult______c_char Function(
   Pointer<ffi.Utf8> viewing_key,
 );
-typedef _get_address_Dart = Pointer<ffi.Utf8> Function(
+typedef _get_address_Dart = CResult______c_char Function(
   Pointer<ffi.Utf8> viewing_key,
 );
 
@@ -131,6 +131,20 @@ typedef _get_key_type_C = Pointer<ffi.Utf8> Function(
 );
 typedef _get_key_type_Dart = Pointer<ffi.Utf8> Function(
   Pointer<ffi.Utf8> key,
+);
+
+/// C function `get_viewing_key`.
+CResult______c_char get_viewing_key(
+  Pointer<ffi.Utf8> secret_key,
+) {
+  return _get_viewing_key(secret_key);
+}
+final _get_viewing_key_Dart _get_viewing_key = _dl.lookupFunction<_get_viewing_key_C, _get_viewing_key_Dart>('get_viewing_key');
+typedef _get_viewing_key_C = CResult______c_char Function(
+  Pointer<ffi.Utf8> secret_key,
+);
+typedef _get_viewing_key_Dart = CResult______c_char Function(
+  Pointer<ffi.Utf8> secret_key,
 );
 
 /// C function `init_account`.

@@ -35,7 +35,9 @@ void send_tx(char *database_path,
 
 bool check_address(char *address);
 
-const char *get_address(char *viewing_key);
+struct CResult______c_char get_viewing_key(char *secret_key);
+
+struct CResult______c_char get_address(char *viewing_key);
 
 const char *get_key_type(char *key);
 

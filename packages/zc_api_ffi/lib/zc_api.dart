@@ -41,7 +41,7 @@ class ZcApi {
         Utf8.fromUtf8(keys.address));
   }
 
-  static KeyPackage initAccountWithViewKey(String databasePath, String viewingKey, int height) {
+  static void initAccountWithViewKey(String databasePath, String viewingKey, int height) {
     zc_ffi.init_account_with_viewing_key(Utf8.toUtf8(databasePath), Utf8.toUtf8(viewingKey), height);
   }
 
@@ -86,9 +86,18 @@ class ZcApi {
     return zc_ffi.check_address(Utf8.toUtf8(address)) != 0;
   }
 
+  static String getViewingKey(String secretKey) {
+    final viewingKey =  zc_ffi.get_viewing_key(Utf8.toUtf8(secretKey));
+    if (viewingKey.err != nullptr)
+      throw ZcApiException(Utf8.fromUtf8(viewingKey.err));
+    return Utf8.fromUtf8(viewingKey.ok);
+  }
+
   static String getAddress(String viewingKey) {
     final address =  zc_ffi.get_address(Utf8.toUtf8(viewingKey));
-    return Utf8.fromUtf8(address);
+    if (address.err != nullptr)
+      throw ZcApiException(Utf8.fromUtf8(address.err));
+    return Utf8.fromUtf8(address.ok);
   }
 
   static String getKeyType(String key) {
@@ -99,7 +108,7 @@ class ZcApi {
   static String prepareTx(String databasePath, String address, double amount) {
     final sats = (amount * 100000000).round();
     final tx = zc_ffi.prepare_tx(Utf8.toUtf8(databasePath), Utf8.toUtf8(address), sats);
-    if (tx.err != null)
+    if (tx.err != nullptr)
       throw ZcApiException(Utf8.fromUtf8(tx.err));
     return Utf8.fromUtf8(tx.ok);
   }
@@ -112,14 +121,14 @@ class ZcApi {
         sendParams.lengthInBytes,
         outputP,
         outputParams.lengthInBytes);
-    if (rawTx.err != null)
+    if (rawTx.err != nullptr)
       throw ZcApiException(Utf8.fromUtf8(rawTx.err));
     return Utf8.fromUtf8(rawTx.ok);
   }
 
   static String broadcast(String rawTx) {
     final result = zc_ffi.broadcast(Utf8.toUtf8(rawTx));
-    if (result.err != null)
+    if (result.err != nullptr)
       throw ZcApiException(Utf8.fromUtf8(result.err));
     return Utf8.fromUtf8(result.ok);
   }
