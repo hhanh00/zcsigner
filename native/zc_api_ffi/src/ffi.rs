@@ -45,7 +45,7 @@ pub extern "C" fn init_account(database_path: *mut c_char) -> CKeys {
 }
 
 #[no_mangle]
-pub extern "C" fn sync(database_path: *mut c_char, max_blocks: u32) -> u64 {
+pub extern "C" fn sync_blockchain(database_path: *mut c_char, max_blocks: u32) -> u64 {
     let database_path = unsafe { CStr::from_ptr(database_path) };
     crate::account::sync(&database_path.to_string_lossy(), max_blocks)
 }

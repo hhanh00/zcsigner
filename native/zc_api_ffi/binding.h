@@ -20,7 +20,7 @@ bool initialize(char *database_path);
 
 struct CKeys init_account(char *database_path);
 
-uint64_t sync(char *database_path, uint32_t max_blocks);
+uint64_t sync_blockchain(char *database_path, uint32_t max_blocks);
 
 uint64_t get_balance(char *database_path);
 

@@ -46,7 +46,7 @@ class ZcApi {
   }
 
   static int sync(String databasePath, int maxBlocks) {
-    final n = zc_ffi.sync(Utf8.toUtf8(databasePath), maxBlocks);
+    final n = zc_ffi.sync_blockchain(Utf8.toUtf8(databasePath), maxBlocks);
     return n;
   }
 

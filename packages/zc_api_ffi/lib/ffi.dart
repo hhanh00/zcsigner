@@ -279,19 +279,19 @@ typedef _sign_tx_Dart = CResult______c_char Function(
   int len_output_params,
 );
 
-/// C function `sync`.
-int sync(
+/// C function `sync_blockchain`.
+int sync_blockchain(
   Pointer<ffi.Utf8> database_path,
   int max_blocks,
 ) {
-  return _sync(database_path, max_blocks);
+  return _sync_blockchain(database_path, max_blocks);
 }
-final _sync_Dart _sync = _dl.lookupFunction<_sync_C, _sync_Dart>('sync');
-typedef _sync_C = Uint64 Function(
+final _sync_blockchain_Dart _sync_blockchain = _dl.lookupFunction<_sync_blockchain_C, _sync_blockchain_Dart>('sync_blockchain');
+typedef _sync_blockchain_C = Uint64 Function(
   Pointer<ffi.Utf8> database_path,
   Uint32 max_blocks,
 );
-typedef _sync_Dart = int Function(
+typedef _sync_blockchain_Dart = int Function(
   Pointer<ffi.Utf8> database_path,
   int max_blocks,
 );
