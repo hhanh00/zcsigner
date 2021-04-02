@@ -11,4 +11,9 @@ public class SwiftZcApiPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     result("iOS " + UIDevice.current.systemVersion)
   }
+
+  public static func dummyMethodToEnforceBundling() {
+    // call some function from our static lib
+    dummy_export(0);
+  }
 }

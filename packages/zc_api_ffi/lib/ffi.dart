@@ -77,6 +77,20 @@ typedef _check_address_Dart = int Function(
   Pointer<ffi.Utf8> address,
 );
 
+/// C function `dummy_export`.
+int dummy_export(
+  int a,
+) {
+  return _dummy_export(a);
+}
+final _dummy_export_Dart _dummy_export = _dl.lookupFunction<_dummy_export_C, _dummy_export_Dart>('dummy_export');
+typedef _dummy_export_C = Uint32 Function(
+  Uint32 a,
+);
+typedef _dummy_export_Dart = int Function(
+  int a,
+);
+
 /// C function `get_address`.
 CResult______c_char get_address(
   Pointer<ffi.Utf8> viewing_key,

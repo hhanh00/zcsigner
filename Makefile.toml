@@ -70,7 +70,7 @@ condition = { platforms = ["mac"], env_true = ["RELEASE"] }
 description = "Build ios targets."
 category = "Build"
 command = "cargo"
-args = ["lipo", "--release"]
+args = ["lipo", "--release", "--targets", "aarch64-apple-ios"]
 dependencies = [
     "setup-crate-type-ios",
 ]

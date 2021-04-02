@@ -201,3 +201,6 @@ pub extern "C" fn get_height(database_path: *mut c_char) -> u32 {
         .unwrap()
         .unwrap_or_default()
 }
+
+#[no_mangle]
+pub extern "C" fn dummy_export(a: u32) -> u32 { a }

@@ -55,3 +55,5 @@ struct CResult______c_char sign_tx(char *secret_key,
 struct CResult______c_char broadcast(char *raw_tx);
 
 uint32_t get_height(char *database_path);
+
+uint32_t dummy_export(uint32_t a);
